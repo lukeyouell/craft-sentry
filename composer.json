@@ -1,0 +1,50 @@
+{
+    "name": "lukeyouell/craft3-sentry",
+    "description": "Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "sentry"
+    ],
+    "support": {
+        "docs": "https://github.com/lukeyouell/craft3-sentry/blob/master/README.md",
+        "issues": "https://github.com/lukeyouell/craft3-sentry/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luke Youell",
+            "homepage": "https://github.com/lukeyouell"
+        }
+    ],
+    "require": {
+        "sentry/sentry": "^1.8.1"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+          "lukeyouell\\sentry\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Sentry",
+        "handle": "sentry",
+        "schemaVersion": "1.0.0",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/lukeyouell/craft3-sentry/master/CHANGELOG.md",
+        "components": {
+            "sentryService": "lukeyouell\\sentry\\services\\SentryService"
+        },
+        "class": "lukeyouell\\sentry\\Sentry"
+    }
+}

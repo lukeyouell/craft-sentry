@@ -1,0 +1,25 @@
+{#
+/**
+ * Sentry plugin for Craft CMS 3.x
+ *
+ * Sentry Settings.twig
+ *
+ * @author    Luke Youell
+ * @copyright Copyright (c) 2017 Luke Youell
+ * @link      https://github.com/lukeyouell
+ * @package   Sentry
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    first: true,
+    label: 'DSN',
+    instructions: 'To send data to Sentry you will need a client key which can be located within your Sentry project settings under \'Client Keys (DSN)\'',
+    id: 'clientDsn',
+    name: 'clientDsn',
+    placeholder: 'https://<key>:<secret>@sentry.io/<project>',
+    value: settings.clientDsn})
+}}
