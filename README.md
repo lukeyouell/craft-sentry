@@ -1,3 +1,5 @@
+<img src="resources/img/icon.png" alt="icon" width="100" height="100">
+
 # Sentry plugin for Craft CMS 3.x
 
 Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.
