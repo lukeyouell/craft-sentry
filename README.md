@@ -18,11 +18,11 @@ To install the plugin, follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require lukeyouell/craft3-gtmetrix
+        composer require lukeyouell/craft3-sentry
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Sentry.
 
-## Configuring GTmetrix
+## Configuring Sentry
 
 Upon successful installation you will be required to supply valid credentials to successfully communicate with the [Sentry](https://sentry.io).
 
