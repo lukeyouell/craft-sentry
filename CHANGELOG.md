@@ -6,14 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
-### Added
-- Icon in png format
-
-### Fixed
-- Spelling mistakes
+- [Added] Icon in png format
+- [Fixed] Spelling mistakes
 
 
 ## 1.0.0 - 2017-11-29
 
-### Added
-- Initial release
+- [Added] Initial release
