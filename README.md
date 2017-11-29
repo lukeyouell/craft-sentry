@@ -39,5 +39,8 @@ To send data to Sentry you will need a client key which can be located within yo
 Some things to do, and ideas for potential features:
 
 - Dev mode toggle
+- Utilise API
+- List projects
+- Automate client key collection
 
 Brought to you by [Luke Youell](https://github.com/lukeyouell)
