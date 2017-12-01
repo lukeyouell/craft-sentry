@@ -24,7 +24,9 @@ To install the plugin, follow these instructions.
 
 ## Configuring Sentry
 
-Upon successful installation you will be required to supply valid credentials to successfully communicate with the [Sentry](https://sentry.io).
+Upon successful installation you will be required to supply an authentication token with `project:read` enabled.
+
+[Authentication tokens are available here](https://sentry.io/api/).
 
 A [Sentry](https://sentry.io) account is required, if you don't already have one [click here to create one](https://sentry.io/signup).
 
@@ -32,15 +34,13 @@ Free & paid plans are available.
 
 ## Using Sentry
 
-To send data to Sentry you will need a client key which can be located within your Sentry project settings under 'Client Keys (DSN)'
+After entering your Sentry authentication token, you will be required to select a Project along with a corresponding Client DSN.
 
 ## Sentry Roadmap
 
 Some things to do, and ideas for potential features:
 
 - Dev mode toggle
-- Utilise API
-- List projects
-- Automate client key collection
+- Create project from within the CP
 
 Brought to you by [Luke Youell](https://github.com/lukeyouell)

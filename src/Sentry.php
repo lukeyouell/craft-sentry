@@ -11,6 +11,7 @@
 namespace lukeyouell\sentry;
 
 use lukeyouell\sentry\services\SentryService;
+use lukeyouell\sentry\variables\SentryVariable;
 use lukeyouell\sentry\models\Settings;
 
 use Craft;
@@ -20,6 +21,7 @@ use craft\events\PluginEvent;
 use craft\events\ExceptionEvent;
 use craft\web\ErrorHandler;
 use craft\helpers\UrlHelper;
+use craft\web\twig\variables\CraftVariable;
 
 use yii\base\Event;
 
@@ -54,8 +56,28 @@ class Sentry extends Plugin
         self::$plugin = $this;
 
         Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('Sentry', SentryVariable::class);
+            }
+        );
+
+        Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                  Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/sentry'))->send();
+                }
+            }
+        );
+
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
                   Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/sentry'))->send();

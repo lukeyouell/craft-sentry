@@ -27,12 +27,73 @@ class SentryService extends Component
     // Public Methods
     // =========================================================================
 
+    // Public Methods
+    // =========================================================================
+
+    /*
+     * @return mixed
+     */
+    public static function apiGet($path = null, $authToken = null)
+    {
+      $settings = Sentry::$plugin->getSettings();
+
+      if ($path === null)
+      {
+        return [
+          'error' => true,
+          'reason' => 'Missing values'
+        ];
+      }
+
+      if ($authToken === null) {
+
+        $authToken = $settings->authToken;
+
+      }
+
+      $client = new \GuzzleHttp\Client([
+        'base_uri' => 'https://app.getsentry.com',
+        'http_errors' => false,
+        'timeout' => 5,
+        'headers' => [
+          'Authorization' => 'Bearer ' . $authToken
+        ]
+      ]);
+
+      try {
+
+        $response = $client->request('GET', $path);
+
+        $body = json_decode($response->getBody());
+
+        if ($response->getStatusCode() === 200) {
+
+          return $body;
+
+        } else {
+
+          return [
+            'error' => true,
+            'reason' => $body->detail
+          ];
+
+        }
+
+      } catch (\Exception $e) {
+
+        return [
+          'error' => true,
+          'reason' => $e->getMessage()
+        ];
+
+      }
+    }
+
     /*
      * @return mixed
      */
     public static function handleException($exception)
     {
-      // Get settings
       $settings = Sentry::$plugin->getSettings();
 
       if ($settings->clientDsn === null)

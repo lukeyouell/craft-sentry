@@ -14,12 +14,77 @@
 
 {% import "_includes/forms" as forms %}
 
+{% do view.registerAssetBundle("lukeyouell\\sentry\\assetbundles\\SentryAsset") %}
+
+{% set projects = settings.authToken ? craft.Sentry.listProjects() : false %}
+{% set keys = settings.project ? craft.Sentry.listKeys(settings.project) : false %}
+{% set projectOptions = [] %}
+{% set keyOptions = [] %}
+
+{% for project in projects %}
+  {% set projectOptions = (project.status is defined) and (project.status == 'active') ? projectOptions|merge([{'value' : project.organization.slug ~ '/' ~ project.slug, 'label' : project.name}]) %}
+{% endfor %}
+
+{% for key in keys %}
+  {% set keyOptions = (key.isActive is defined) and (key.isActive) ? keyOptions|merge([{'value' : key.dsn.secret, 'label' : key.name}]) %}
+{% endfor %}
+
 {{ forms.textField({
     first: true,
-    label: 'DSN',
-    instructions: 'To send data to Sentry you will need a client key which can be located within your Sentry project settings under \'Client Keys (DSN)\'',
-    id: 'clientDsn',
-    name: 'clientDsn',
-    placeholder: 'https://<key>:<secret>@sentry.io/<project>',
-    value: settings.clientDsn})
+    label: 'Authentication Token',
+    instructions: 'Authentication tokens allow you to perform actions against the Sentry API on behalf of your account.',
+    id: 'authToken',
+    name: 'authToken',
+    placeholder: 'ScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUjScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUj',
+    value: settings.authToken,
+    required: true})
 }}
+
+{% set projectInput %}
+
+  <div class="flex">
+
+    {{ forms.select({
+        name: 'project',
+        id: 'project',
+        options: projectOptions,
+        value: settings.project,
+      })
+    }}
+
+    <div class="btn" id="projectBtn">{{ 'Refresh'|t }}</div>
+    <div class="spinner hidden" id="projectSpinner"></div>
+
+  </div>
+
+{% endset %}
+
+{{ forms.field({
+    label: 'Project'|t,
+}, projectInput) }}
+
+{% set keyInput %}
+
+  <!--email_off-->
+
+  <div class="flex">
+
+    {{ forms.select({
+        name: 'clientDsn',
+        id: 'clientDsn',
+        options: keyOptions,
+        value: settings.clientDsn,
+      })
+    }}
+
+    <div class="spinner hidden" id="keySpinner"></div>
+
+  </div>
+
+  <!--/email_off-->
+
+{% endset %}
+
+{{ forms.field({
+    label: 'Client DSN'|t,
+}, keyInput) }}
