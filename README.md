@@ -6,7 +6,7 @@ Error tracking that helps developers monitor and fix crashes in real time. Itera
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 3.0.0-RC1, or later.
 
 ## Installation
 
