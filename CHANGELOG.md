@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.1 - 2017-12-15
+
+- [Fixed] Craft 3 composer requirement
+
 ## 1.1.0 - 2017-12-01
 
 - [Added] API Support, which allows you to select a Project & Client DSN from the CP (authentication token with `project:read` required)
