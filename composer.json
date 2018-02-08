@@ -2,7 +2,7 @@
     "name": "lukeyouell/craft3-sentry",
     "description": "Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.",
     "type": "craft-plugin",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "keywords": [
         "craft",
         "cms",
@@ -11,8 +11,8 @@
         "sentry"
     ],
     "support": {
-        "docs": "https://github.com/lukeyouell/craft3-sentry/blob/master/README.md",
-        "issues": "https://github.com/lukeyouell/craft3-sentry/issues"
+        "docs": "https://github.com/lukeyouell/craft-sentry/blob/v1/README.md",
+        "issues": "https://github.com/lukeyouell/craft-sentry/issues"
     },
     "license": "MIT",
     "authors": [
@@ -42,7 +42,7 @@
         "schemaVersion": "1.0.0",
         "hasCpSettings": true,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/lukeyouell/craft3-sentry/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/lukeyouell/craft-sentry/v1/CHANGELOG.md",
         "components": {
             "sentryService": "lukeyouell\\sentry\\services\\SentryService"
         },
