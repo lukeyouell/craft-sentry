@@ -29,40 +29,57 @@
   {% set keyOptions = (key.isActive is defined) and (key.isActive) ? keyOptions|merge([{'value' : key.dsn.secret, 'label' : key.name}]) %}
 {% endfor %}
 
-{{ forms.textField({
-    first: true,
-    label: 'Authentication Token',
-    instructions: 'Authentication tokens allow you to perform actions against the Sentry API on behalf of your account.',
-    id: 'authToken',
-    name: 'authToken',
-    placeholder: 'ScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUjScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUj',
-    value: settings.authToken,
-    required: true})
-}}
+{% macro configWarning(setting) -%}
+  {% set setting = '<code>' ~ setting ~ '</code>' %}
+  {{ 'This is being overridden by the {setting} config setting in your {file} config file.'|t('sentry', {
+      setting: setting,
+      file:    'sentry.php'
+  })|raw }}
+{%- endmacro %}
 
-<a class="btn" href="https://sentry.io/api/" target="_blank">Get Authentication Token</a>
+{% from _self import configWarning %}
+
+{{ forms.textField({
+    first:        true,
+    label:        'Authentication Token',
+    required:     true,
+    instructions: 'Authentication tokens allow you to perform actions against the Sentry API on behalf of your account.',
+    id:           'authToken',
+    name:         'authToken',
+    placeholder:  'ScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUjScpkLqWe5VDSSYXDsHVEMj3j1KRCyZUj',
+    value:        settings.authToken,
+    disabled:     'authToken' in overrides,
+    warning:      'authToken' in overrides ? configWarning('authToken')
+}) }}
+
+{% if 'authToken' not in overrides %}
+  <a class="btn" href="https://sentry.io/api/" target="_blank">Get Authentication Token</a>
+{% endif %}
 
 {% set projectInput %}
 
   <div class="flex">
 
     {{ forms.select({
-        name: 'project',
-        id: 'project',
-        options: projectOptions,
-        value: settings.project,
-      })
-    }}
+        name:     'project',
+        id:       'project',
+        options:  projectOptions,
+        value:    settings.project,
+        disabled: 'project' in overrides
+    }) }}
 
-    <div class="btn" id="projectBtn">{{ 'Refresh'|t }}</div>
-    <div class="spinner hidden" id="projectSpinner"></div>
+    {% if 'project' not in overrides %}
+      <div class="btn" id="projectBtn">{{ 'Refresh'|t }}</div>
+      <div class="spinner hidden" id="projectSpinner"></div>
+    {% endif %}
 
   </div>
 
 {% endset %}
 
 {{ forms.field({
-    label: 'Project'|t,
+    label:   'Project'|t,
+    warning: 'project' in overrides ? configWarning('project')
 }, projectInput) }}
 
 {% set keyInput %}
@@ -70,16 +87,18 @@
   <!--email_off-->
 
   <div class="flex">
-
     {{ forms.select({
-        name: 'clientDsn',
-        id: 'clientDsn',
-        options: keyOptions,
-        value: settings.clientDsn,
+        name:     'clientDsn',
+        id:       'clientDsn',
+        options:  keyOptions,
+        value:    settings.clientDsn,
+        disabled: 'clientDsn' in overrides
       })
     }}
 
-    <div class="spinner hidden" id="keySpinner"></div>
+    {% if 'clientDsn' not in overrides %}
+      <div class="spinner hidden" id="keySpinner"></div>
+    {% endif %}
 
   </div>
 
@@ -88,5 +107,6 @@
 {% endset %}
 
 {{ forms.field({
-    label: 'Client DSN'|t,
+    label:   'Client DSN'|t,
+    warning: 'clientDsn' in overrides ? configWarning('clientDsn')
 }, keyInput) }}
