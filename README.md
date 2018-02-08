@@ -43,13 +43,13 @@ If you create a [config file](https://craftcms.com/docs/config-settings) in your
 Here’s what that config file might look like along with a list of all of the possible values you can override.
 
 ```php
-    <?php
+<?php
 
-    return [
-        'authToken' => '',
-        'project'   => '',
-        'clientDsn' => ''
-    ];
+return [
+    'authToken' => '',
+    'project'   => '',
+    'clientDsn' => ''
+];
 ```
 
 ## Sentry Roadmap
