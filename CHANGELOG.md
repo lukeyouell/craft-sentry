@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+- Multi-environment support
+
 ## 1.1.2 - 2018-02-08
 
 ### Added
