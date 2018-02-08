@@ -46,7 +46,7 @@ Here’s what that config file might look like along with a list of all of the p
     <?php
 
     return [
-        'authtoken' => '',
+        'authToken' => '',
         'project'   => '',
         'clientDsn' => ''
     ];
