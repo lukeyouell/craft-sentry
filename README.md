@@ -36,6 +36,22 @@ Free & paid plans are available.
 
 After entering your Sentry authentication token, you will be required to select a Project along with a corresponding Client DSN.
 
+## Overriding Plugin Settings
+
+If you create a [config file](https://craftcms.com/docs/config-settings) in your `config` folder called `sentry.php`, you can override the plugin’s settings in the Control Panel. Since that config file is fully [multi-environment](https://craftcms.com/docs/multi-environment-configs) aware, this is a handy way to have different settings across multiple environments.
+
+Here’s what that config file might look like along with a list of all of the possible values you can override.
+
+```php
+    <?php
+
+    return [
+        'authtoken' => '',
+        'project'   => '',
+        'clientDsn' => ''
+    ];
+```
+
 ## Sentry Roadmap
 
 Some things to do, and ideas for potential features:
