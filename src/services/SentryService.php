@@ -95,8 +95,10 @@ class SentryService extends Component
     public static function handleException($exception)
     {
       $settings = Sentry::$plugin->getSettings();
+      $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
+      $excludedCodes = explode(', ', $settings->excludedCodes);
 
-      if ($settings->clientDsn === null)
+      if (($settings->clientDsn === null) or (in_array($statusCode, $excludedCodes)))
       {
         return;
       }
@@ -126,7 +128,8 @@ class SentryService extends Component
           'App Type' => 'Craft CMS',
           'App Version' => Craft::$app->getVersion(),
           'Environment' => CRAFT_ENVIRONMENT,
-          'PHP Version' => phpversion()
+          'PHP Version' => phpversion(),
+          'Status Code' => $statusCode
         ]
       ]);
     }
