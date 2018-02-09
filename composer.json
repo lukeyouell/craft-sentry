@@ -1,5 +1,5 @@
 {
-    "name": "lukeyouell/craft3-sentry",
+    "name": "lukeyouell/craft-sentry",
     "description": "Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.",
     "type": "craft-plugin",
     "version": "1.2.0",
