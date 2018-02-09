@@ -4,16 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-## Added
+### Added
 - Option to ignore certain error codes
 - Status code now passed as additional data
 
-## Changed
+### Changed
 - Settings template tweaks
 
 ## 1.2.1 - 2018-02-09
 
-## Changed
+### Changed
 - Renamed the composer package name to `craft-sentry`
 
 ## 1.2.0 - 2018-02-08
