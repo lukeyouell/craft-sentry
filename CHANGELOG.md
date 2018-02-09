@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.3.0 - 2018-02-09
 
 ### Added
 - Option to ignore certain error codes [#2](https://github.com/lukeyouell/craft-sentry/issues/2)
