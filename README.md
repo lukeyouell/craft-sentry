@@ -58,5 +58,6 @@ Some things to do, and ideas for potential features:
 
 - Dev mode toggle
 - Create project from within the CP
+- Option to ignore certain error codes
 
 Brought to you by [Luke Youell](https://github.com/lukeyouell)
