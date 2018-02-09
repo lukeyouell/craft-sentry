@@ -56,6 +56,8 @@
   <a class="btn" href="https://sentry.io/api/" target="_blank">Get Authentication Token</a>
 {% endif %}
 
+<hr>
+
 {% set projectInput %}
 
   <div class="flex">
@@ -110,3 +112,16 @@
     label:   'Client DSN'|t,
     warning: 'clientDsn' in overrides ? configWarning('clientDsn')
 }, keyInput) }}
+
+<hr>
+
+{{ forms.textField({
+    label:        'Excluded HTTP Error Codes',
+    instructions: 'Comma separated list of HTTP error codes that should not be sent to Sentry.',
+    id:           'excludedCodes',
+    name:         'excludedCodes',
+    placeholder:  '400, 404, 429',
+    value:        settings.excludedCodes,
+    disabled:     'excludedCodes' in overrides,
+    warning:      'excludedCodes' in overrides ? configWarning('excludedCodes')
+}) }}
