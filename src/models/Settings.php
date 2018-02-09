@@ -40,6 +40,11 @@ class Settings extends Model
      */
     public $clientDsn = null;
 
+    /**
+     * @var string
+     */
+    public $excludedCodes = null;
+
     // Public Methods
     // =========================================================================
 
@@ -49,7 +54,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['authToken', 'project', 'clientDsn'], 'string'],
+            [['authToken', 'project', 'clientDsn', 'excludedCodes'], 'string'],
             [['authToken'], 'required']
         ];
     }
