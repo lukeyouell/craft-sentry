@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 
 ### Added
-- Option to ignore certain error codes
+- Option to ignore certain error codes [#2](https://github.com/lukeyouell/craft-sentry/issues/2)
 - Status code now passed as additional data
 
 ### Changed
