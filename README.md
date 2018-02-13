@@ -4,6 +4,8 @@
 
 Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.
 
+![Screenshot](resources/img/screenshot.png)
+
 ## Requirements
 
 This plugin requires Craft CMS 3.0.0-RC1, or later.
