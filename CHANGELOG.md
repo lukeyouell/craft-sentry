@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+- Set Craft CMS minimum requirement to `^3.0.0-RC11`
+- Set Sentry minimum requirement to `^1.8.3`
+
 ## 1.3.1 - 2018-02-09
 
 ### Fixed
