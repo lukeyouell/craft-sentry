@@ -1,4 +1,4 @@
-<img src="resources/img/icon.png" alt="icon" width="100" height="100">
+<img src="src/icon.svg" alt="icon" width="100" height="100">
 
 # Sentry plugin for Craft CMS 3.x
 
