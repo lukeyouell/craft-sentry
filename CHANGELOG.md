@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.3.2 - 2018-03-12
 
 ### Changed
 - Set Craft CMS minimum requirement to `^3.0.0-RC11`
