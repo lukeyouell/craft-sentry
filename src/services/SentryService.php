@@ -27,9 +27,6 @@ class SentryService extends Component
     // Public Methods
     // =========================================================================
 
-    // Public Methods
-    // =========================================================================
-
     /*
      * @return mixed
      */
@@ -127,7 +124,7 @@ class SentryService extends Component
         'extra' => [
           'App Type' => 'Craft CMS',
           'App Version' => Craft::$app->getVersion(),
-          'Environment' => CRAFT_ENVIRONMENT,
+          'Environment' => defined(CRAFT_ENVIRONMENT) ? CRAFT_ENVIRONMENT : 'undefined',
           'PHP Version' => phpversion(),
           'Status Code' => $statusCode
         ]
