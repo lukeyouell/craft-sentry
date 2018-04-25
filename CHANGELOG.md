@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.3.3 - 2018-04-25
+
+## Added
+- Added defensive code for `CRAFT_ENVIRONMENT`
+
 ## 1.3.2 - 2018-03-12
 
 ### Changed
