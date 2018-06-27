@@ -93,7 +93,9 @@ class SentryService extends Component
     {
       $settings = Sentry::$plugin->getSettings();
       $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
-      $excludedCodes = explode(', ', $settings->excludedCodes);
+      $excludedCodes = array_map(function($code) {
+        return trim($code);
+      }, explode(',', $settings->excludedCodes));
 
       if (($settings->clientDsn === null) or (in_array($statusCode, $excludedCodes)))
       {
