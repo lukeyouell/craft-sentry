@@ -92,7 +92,7 @@ class SentryService extends Component
     public static function handleException($exception)
     {
       $settings = Sentry::$plugin->getSettings();
-      $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
+      $statusCode = SentryService::getStatusCode($exception);
       $excludedCodes = array_map(function($code) {
         return trim($code);
       }, explode(',', $settings->excludedCodes));
@@ -132,4 +132,17 @@ class SentryService extends Component
         ]
       ]);
     }
+
+  /**
+   * Recursive function to get the status code of the exception
+   * @param Object $exception
+   * @return Int
+   */
+  private static function getStatusCode($exception) {
+    if (empty($exception)) return http_response_code();
+    if (isset($exception->statusCode)) return $exception->statusCode;
+    if (method_exists($exception, 'getPrevious'))
+      return SentryService::getStatusCode($exception->getPrevious());
+    return 500;
+  }
 }
