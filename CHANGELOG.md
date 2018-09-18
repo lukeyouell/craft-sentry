@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Improved settings templates
 
+### Fixed
+- Excluded status codes being ignored if values included a whitespace ([#](https://github.com/lukeyouell/craft-sentry/issues/5))
+
 ## 1.3.3 - 2018-04-25
 
 ### Added
