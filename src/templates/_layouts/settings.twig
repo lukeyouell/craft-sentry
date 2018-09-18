@@ -34,3 +34,7 @@
         </ul>
     </nav>
 {% endblock %}
+
+{% js at head %}
+  window.sentryAuthToken = '{{ settings.authToken ?: 'null' }}';
+{% endjs %}
