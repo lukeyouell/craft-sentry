@@ -1,0 +1,85 @@
+{% extends "sentry/_layouts/settings" %}
+
+{% set fullPageForm = true %}
+
+{% import "_includes/forms" as forms %}
+{% import "sentry/_macros/settings" as macros %}
+
+{% do view.registerAssetBundle("lukeyouell\\sentry\\assetbundles\\SentryAsset") %}
+
+{% set projectOptions = [] %}
+{% set keyOptions = [] %}
+
+{% for project in projects %}
+  {% set projectOptions = (project.status is defined) and (project.status == 'active') ? projectOptions|merge([{'value' : project.organization.slug ~ '/' ~ project.slug, 'label' : project.name}]) %}
+{% endfor %}
+
+{% for key in keys %}
+  {% set keyOptions = (key.isActive is defined) and (key.isActive) ? keyOptions|merge([{'value' : key.dsn.secret, 'label' : key.name}]) %}
+{% endfor %}
+
+{% block content %}
+  {{ forms.hidden({
+      name: 'action',
+      value: 'plugins/save-plugin-settings'
+  })}}
+
+  {{ forms.hidden({
+      name: 'pluginHandle',
+      value: plugin.handle
+  })}}
+
+  <h2 class="first">Project Settings</h2>
+
+  {% set projectInput %}
+
+    <div class="flex">
+      {{ forms.select({
+          name:     'settings[project]',
+          id:       'project',
+          options:  projectOptions,
+          value:    settings.project,
+          disabled: 'project' in overrides
+      }) }}
+
+      {% if 'project' not in overrides %}
+        <div class="btn" id="projectBtn">{{ 'Refresh'|t }}</div>
+        <div class="spinner hidden" id="projectSpinner"></div>
+      {% endif %}
+    </div>
+
+  {% endset %}
+
+  {{ forms.field({
+      label:   'Project'|t,
+      warning: 'project' in overrides ? macros.configWarning('project')
+  }, projectInput) }}
+
+  {% set keyInput %}
+
+    <!--email_off-->
+
+    <div class="flex">
+      {{ forms.select({
+          name:     'settings[clientDsn]',
+          id:       'clientDsn',
+          options:  keyOptions,
+          value:    settings.clientDsn,
+          disabled: 'clientDsn' in overrides
+        })
+      }}
+
+      {% if 'clientDsn' not in overrides %}
+        <div class="spinner hidden" id="keySpinner"></div>
+      {% endif %}
+    </div>
+
+    <!--/email_off-->
+
+  {% endset %}
+
+  {{ forms.field({
+      label:   'Client DSN'|t,
+      warning: 'clientDsn' in overrides ? macros.configWarning('clientDsn')
+  }, keyInput) }}
+{% endblock %}
