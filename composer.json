@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC11",
+        "craftcms/cms": "^3.0",
         "sentry/sentry": "^1.8.3"
     },
     "repositories": [
