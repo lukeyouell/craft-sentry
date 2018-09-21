@@ -126,7 +126,7 @@ class SentryService extends Component
         'extra' => [
           'App Type' => 'Craft CMS',
           'App Version' => Craft::$app->getVersion(),
-          'Environment' => defined(CRAFT_ENVIRONMENT) ? CRAFT_ENVIRONMENT : 'undefined',
+          'Environment' => CRAFT_ENVIRONMENT ?: 'undefined',
           'PHP Version' => phpversion(),
           'Status Code' => $statusCode
         ]

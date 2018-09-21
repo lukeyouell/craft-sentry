@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Excluded status codes being ignored if values included a whitespace ([#5](https://github.com/lukeyouell/craft-sentry/issues/5))
 - Potential for twig to error if only the auth token is saved ([#4](https://github.com/lukeyouell/craft-sentry/issues/4))
+- Environment wasn't being passed onto Sentry ([#8](https://github.com/lukeyouell/craft-sentry/issues/8))
 
 ## 1.3.3 - 2018-04-25
 
