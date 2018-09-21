@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.4.0 - 2018-09-21
 
 ### Changed
 - Improved settings templates
