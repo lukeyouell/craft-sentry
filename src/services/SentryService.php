@@ -92,6 +92,12 @@ class SentryService extends Component
     public static function handleException($exception)
     {
       $settings = Sentry::$plugin->getSettings();
+
+      // If this is a Twig Runtime exception, use the previous one instead
+      if ($exception instanceof \Twig_Error_Runtime && ($previousException = $exception->getPrevious()) !== null) {
+          $exception = $previousException;
+      }
+
       $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
       $excludedCodes = array_map(function($code) {
         return trim($code);
