@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Improved settings templates
+- General housekeeping
 
 ### Fixed
 - Excluded status codes being ignored if values included a whitespace ([#5](https://github.com/lukeyouell/craft-sentry/issues/5))
