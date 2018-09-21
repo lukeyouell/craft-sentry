@@ -1,0 +1,40 @@
+{% extends "sentry/_layouts/settingscp" %}
+
+{% set title = 'Sentry Settings' %}
+
+{% set navItems = {
+    'authentication': { title: 'Authentication' },
+} %}
+
+{% if settings.authToken %}
+  {% set navItems = navItems|merge({
+      'project':        { title: 'Project Settings' },
+      'excluded-codes': { title: 'Excluded Codes' },
+  }) %}
+{% endif %}
+
+{% if selectedItem is not defined %}
+    {% set selectedItem = craft.app.request.getSegment(3) %}
+{% endif %}
+
+{% set docTitle = navItems[selectedItem].title ~ ' - ' ~ title %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            {% for id, item in navItems %}
+                {% if item.heading is defined %}
+                    <li class="heading"><span>{{ item.heading }}</span></li>
+                {% else %}
+                    <li>
+                        <a href="{{ url('settings/sentry/' ~ id) }}"{% if id == selectedItem %} class="sel"{% endif %}>{{ item.title }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% js at head %}
+  window.sentryAuthToken = '{{ settings.authToken ?: 'null' }}';
+{% endjs %}

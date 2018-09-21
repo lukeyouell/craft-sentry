@@ -1,7 +1,7 @@
-var authToken = '#settings-authToken';
-var projects = '#settings-project';
-var projectsRefresh = '#settings-projectBtn';
-var keys = '#settings-clientDsn';
+var authTokenVal = window.sentryAuthToken;
+var projects = '#project';
+var projectsRefresh = '#projectBtn';
+var keys = '#clientDsn';
 
 $(projects).on('change', function() {
 
@@ -17,13 +17,13 @@ $(projectsRefresh).on('click', function() {
 
 function updateProjects() {
 
-  var spinner = '#settings-projectSpinner';
+  var spinner = '#projectSpinner';
 
   $(projectsRefresh).addClass('disabled');
   $(projects).empty();
   $(spinner).removeClass('hidden');
 
-  Craft.postActionRequest('sentry/sentry/list-projects', { authToken: $(authToken).val() }, function(response) {
+  Craft.postActionRequest('sentry/sentry/list-projects', { authToken: authTokenVal }, function(response) {
 
     if (response.error) {
 
@@ -54,12 +54,12 @@ function updateProjects() {
 
 function updateKeys() {
 
-  var spinner = '#settings-keySpinner';
+  var spinner = '#keySpinner';
 
   $(keys).empty();
   $(spinner).removeClass('hidden');
 
-  Craft.postActionRequest('sentry/sentry/list-keys', { authToken: $(authToken).val(), project: $(projects).val() }, function(response) {
+  Craft.postActionRequest('sentry/sentry/list-keys', { authToken: authTokenVal, project: $(projects).val() }, function(response) {
 
     if (response.length > 0) {
 

@@ -32,58 +32,44 @@ class SentryService extends Component
      */
     public static function apiGet($path = null, $authToken = null)
     {
-      $settings = Sentry::$plugin->getSettings();
+        $settings = Sentry::$plugin->getSettings();
 
-      if ($path === null)
-      {
-        return [
-          'error' => true,
-          'reason' => 'Missing values'
-        ];
-      }
-
-      if ($authToken === null) {
-
-        $authToken = $settings->authToken;
-
-      }
-
-      $client = new \GuzzleHttp\Client([
-        'base_uri' => 'https://app.getsentry.com',
-        'http_errors' => false,
-        'timeout' => 5,
-        'headers' => [
-          'Authorization' => 'Bearer ' . $authToken
-        ]
-      ]);
-
-      try {
-
-        $response = $client->request('GET', $path);
-
-        $body = json_decode($response->getBody());
-
-        if ($response->getStatusCode() === 200) {
-
-          return $body;
-
-        } else {
-
-          return [
-            'error' => true,
-            'reason' => $body->detail
-          ];
-
+        if ($path === null) {
+            return [
+                'error'  => true,
+                'reason' => 'Missing values'
+            ];
         }
 
-      } catch (\Exception $e) {
+        if ($authToken === null) {
+            $authToken = $settings->authToken;
+        }
 
-        return [
-          'error' => true,
-          'reason' => $e->getMessage()
-        ];
+        $client = new \GuzzleHttp\Client([
+            'base_uri'    => 'https://app.getsentry.com',
+            'http_errors' => false,
+            'timeout'     => 5,
+            'headers'     => ['Authorization' => 'Bearer ' . $authToken]
+        ]);
 
-      }
+        try {
+            $response = $client->request('GET', $path);
+            $body = json_decode($response->getBody());
+
+            if ($response->getStatusCode() === 200) {
+                return $body;
+            } else {
+                return [
+                    'error'  => true,
+                    'reason' => $body->detail
+                ];
+            }
+        } catch (\Exception $e) {
+              return [
+                  'error'  => true,
+                  'reason' => $e->getMessage()
+              ];
+        }
     }
 
     /*
@@ -91,43 +77,48 @@ class SentryService extends Component
      */
     public static function handleException($exception)
     {
-      $settings = Sentry::$plugin->getSettings();
-      $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
-      $excludedCodes = explode(', ', $settings->excludedCodes);
+        $settings = Sentry::$plugin->getSettings();
 
-      if (($settings->clientDsn === null) or (in_array($statusCode, $excludedCodes)))
-      {
-        return;
-      }
+        // If this is a Twig Runtime exception, use the previous one instead
+        if ($exception instanceof \Twig_Error_Runtime && ($previousException = $exception->getPrevious()) !== null) {
+            $exception = $previousException;
+        }
 
-      $user = Craft::$app->getUser()->getIdentity();
+        $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
+        $excludedCodes = array_map(function($code) {
+            return trim($code);
+        }, explode(',', $settings->excludedCodes));
 
-      $sentryClient = new Raven_Client($settings->clientDsn);
+        if (($settings->clientDsn === null) or (in_array($statusCode, $excludedCodes))) {
+            return;
+        }
 
-      $error_handler = new Raven_ErrorHandler($sentryClient);
-      $error_handler->registerExceptionHandler();
-      $error_handler->registerErrorHandler();
-      $error_handler->registerShutdownFunction();
+        $user = Craft::$app->getUser()->getIdentity();
 
-      if ($user) {
+        $sentryClient = new Raven_Client($settings->clientDsn);
 
-        $sentryClient->user_context([
-          'id' => $user->id,
-          'username' => $user->username,
-          'email' => $user->email,
-          'admin' => $user->admin ? 'Yes' : 'No'
+        $error_handler = new Raven_ErrorHandler($sentryClient);
+        $error_handler->registerExceptionHandler();
+        $error_handler->registerErrorHandler();
+        $error_handler->registerShutdownFunction();
+
+        if ($user) {
+            $sentryClient->user_context([
+                'id'       => $user->id,
+                'username' => $user->username,
+                'email'    => $user->email,
+                'admin'    => $user->admin ? 'Yes' : 'No'
+            ]);
+        }
+
+        $sentryClient->captureException($exception, [
+            'extra' => [
+                'App Type'    => 'Craft CMS',
+                'App Version' => Craft::$app->getVersion(),
+                'Environment' => CRAFT_ENVIRONMENT ?: 'undefined',
+                'PHP Version' => phpversion(),
+                'Status Code' => $statusCode
+            ]
         ]);
-
-      }
-
-      $sentryClient->captureException($exception, [
-        'extra' => [
-          'App Type' => 'Craft CMS',
-          'App Version' => Craft::$app->getVersion(),
-          'Environment' => defined(CRAFT_ENVIRONMENT) ? CRAFT_ENVIRONMENT : 'undefined',
-          'PHP Version' => phpversion(),
-          'Status Code' => $statusCode
-        ]
-      ]);
     }
 }

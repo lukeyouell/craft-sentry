@@ -11,87 +11,51 @@
 namespace lukeyouell\sentry;
 
 use lukeyouell\sentry\services\SentryService;
-use lukeyouell\sentry\variables\SentryVariable;
 use lukeyouell\sentry\models\Settings;
+use lukeyouell\sentry\variables\SentryVariable;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\events\ExceptionEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\web\ErrorHandler;
-use craft\helpers\UrlHelper;
+use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 
 use yii\base\Event;
 
-/**
- * Class Sentry
- *
- * @author    Luke Youell
- * @package   Sentry
- * @since     1.0.0
- *
- * @property  SentryServiceService $sentryService
- */
 class Sentry extends Plugin
 {
     // Static Properties
     // =========================================================================
 
-    /**
-     * @var Sentry
-     */
     public static $plugin;
 
     // Public Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
     public function init()
     {
         parent::init();
         self::$plugin = $this;
 
         Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['settings/sentry/authentication'] = 'sentry/settings/authentication';
+                $event->rules['settings/sentry/project'] = 'sentry/settings/project';
+                $event->rules['settings/sentry/excluded-codes'] = 'sentry/settings/excluded-codes';
+            }
+        );
+
+        Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
             function (Event $event) {
-                /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('Sentry', SentryVariable::class);
             }
-        );
-
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                  Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/sentry'))->send();
-                }
-            }
-        );
-
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_SAVE_PLUGIN_SETTINGS,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                  Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('settings/plugins/sentry'))->send();
-                }
-            }
-        );
-
-        Craft::info(
-            Craft::t(
-                'sentry',
-                '{name} plugin loaded',
-                ['name' => $this->name]
-            ),
-            __METHOD__
         );
 
         Event::on(
@@ -106,32 +70,13 @@ class Sentry extends Plugin
     // Protected Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
     protected function createSettingsModel()
     {
         return new Settings();
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function settingsHtml(): string
     {
-        // Get and pre-validate the settings
-        $settings = $this->getSettings();
-        $settings->validate();
-
-        // Get the settings that are being defined by the config file
-        $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
-
-        return Craft::$app->view->renderTemplate(
-            'sentry/settings',
-            [
-                'settings' => $settings,
-                'overrides' => array_keys($overrides)
-            ]
-        );
+        return Craft::$app->view->renderTemplate('sentry/settings');
     }
 }
