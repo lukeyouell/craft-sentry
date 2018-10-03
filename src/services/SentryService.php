@@ -96,6 +96,10 @@ class SentryService extends Component
         $user = Craft::$app->getUser()->getIdentity();
 
         $sentryClient = new Raven_Client($settings->clientDsn);
+        
+        if (CRAFT_ENVIRONMENT) {
+            $sentryClient->setEnvironment(CRAFT_ENVIRONMENT);
+        }
 
         $error_handler = new Raven_ErrorHandler($sentryClient);
         $error_handler->registerExceptionHandler();
