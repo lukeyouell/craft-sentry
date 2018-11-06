@@ -89,7 +89,11 @@ class SentryService extends Component
             return trim($code);
         }, explode(',', $settings->excludedCodes));
 
-        if (($settings->clientDsn === null) or (in_array($statusCode, $excludedCodes))) {
+        if (
+            (!$settings->enabled) or
+            ($settings->clientDsn === null) or
+            (in_array($statusCode, $excludedCodes))
+        ) {
             return;
         }
 

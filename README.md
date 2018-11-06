@@ -48,6 +48,7 @@ Here’s what that config file might look like along with a list of all of the p
 <?php
 
 return [
+    'enabled'       => true,
     'authToken'     => '',
     'project'       => '',
     'clientDsn'     => '',
@@ -55,11 +56,12 @@ return [
 ];
 ```
 
+Setting `enabled` to `false` will stop the plugin from capturing exceptions and reporting them to Sentry.
+
 ## Sentry Roadmap
 
 Some things to do, and ideas for potential features:
 
-- Dev mode toggle
 - Create project from within the CP
 
 Brought to you by [Luke Youell](https://github.com/lukeyouell)

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.4.1 - 2018-11-06
+
+### Added
+- Added `enabled` config setting, allowing for exception capturing to be turned on or off per environment
+
 ## 1.4.0 - 2018-09-21
 
 ### Changed
