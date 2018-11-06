@@ -28,6 +28,11 @@ class Settings extends Model
     /**
      * @var string
      */
+    public $enabled = true;
+
+    /**
+     * @var string
+     */
     public $authToken = null;
 
     /**
@@ -54,6 +59,7 @@ class Settings extends Model
     public function rules()
     {
         return [
+            [['enabled'], 'boolean'],
             [['authToken', 'project', 'clientDsn', 'excludedCodes'], 'string'],
             [['authToken'], 'required']
         ];
