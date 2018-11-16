@@ -41,4 +41,13 @@ class SentryVariable
         return SentryService::apiGet('/api/0/projects/' . $project . '/keys/');
 
     }
+
+    /**
+     * Sentry project DSN
+     *
+     * @return string
+     */
+    public function dsn() {
+        return Sentry::$plugin->getSettings()->clientDsn;
+    }
 }
