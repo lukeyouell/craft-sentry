@@ -10,9 +10,6 @@
 
 namespace lukeyouell\sentry\models;
 
-use lukeyouell\sentry\Sentry;
-
-use Craft;
 use craft\base\Model;
 
 /**
@@ -26,7 +23,7 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * @var string
+     * @var boolean
      */
     public $enabled = true;
 
@@ -50,6 +47,11 @@ class Settings extends Model
      */
     public $excludedCodes = null;
 
+    /**
+     * @var string
+     */
+    public $environment = null;
+
     // Public Methods
     // =========================================================================
 
@@ -60,7 +62,7 @@ class Settings extends Model
     {
         return [
             [['enabled'], 'boolean'],
-            [['authToken', 'project', 'clientDsn', 'excludedCodes'], 'string'],
+            [['authToken', 'project', 'clientDsn', 'excludedCodes', 'environment'], 'string'],
             [['authToken'], 'required']
         ];
     }

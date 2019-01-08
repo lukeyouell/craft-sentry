@@ -82,4 +82,15 @@
       label:   'Client DSN'|t,
       warning: 'clientDsn' in overrides ? macros.configWarning('clientDsn')
   }, keyInput) }}
+
+  {{ forms.textField({
+      label:        'Sentry Environment',
+      instructions: 'Sentry environment that will be attached to the events.',
+      id:           'environment',
+      name:         'settings[environment]',
+      placeholder:  'dev',
+      value:        settings.environment,
+      disabled:     'environment' in overrides,
+      warning:      'environment' in overrides ? macros.configWarning('environment')
+  }) }}
 {% endblock %}

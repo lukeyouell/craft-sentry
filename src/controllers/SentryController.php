@@ -10,11 +10,8 @@
 
 namespace lukeyouell\sentry\controllers;
 
-use lukeyouell\sentry\Sentry;
-
 use Craft;
 use craft\web\Controller;
-use craft\elements\Entry;
 use lukeyouell\sentry\services\SentryService;
 
 /**

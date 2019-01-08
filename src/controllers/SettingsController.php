@@ -15,9 +15,6 @@ use lukeyouell\sentry\Sentry;
 use Craft;
 use craft\web\Controller;
 
-use yii\base\InvalidConfigException;
-use yii\web\NotFoundHttpException;
-
 class SettingsController extends Controller
 {
     // Public Properties

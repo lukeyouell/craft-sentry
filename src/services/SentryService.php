@@ -101,6 +101,12 @@ class SentryService extends Component
 
         $sentryClient = new Raven_Client($settings->clientDsn);
 
+        $environment = $settings->environment ?: CRAFT_ENVIRONMENT ?: null;
+
+        if ($environment) {
+            $sentryClient->setEnvironment($environment);
+        }
+
         $error_handler = new Raven_ErrorHandler($sentryClient);
         $error_handler->registerExceptionHandler();
         $error_handler->registerErrorHandler();
@@ -119,7 +125,7 @@ class SentryService extends Component
             'extra' => [
                 'App Type'    => 'Craft CMS',
                 'App Version' => Craft::$app->getVersion(),
-                'Environment' => CRAFT_ENVIRONMENT ?: 'undefined',
+                'Environment' => $environment ?: 'undefined',
                 'PHP Version' => phpversion(),
                 'Status Code' => $statusCode
             ]
