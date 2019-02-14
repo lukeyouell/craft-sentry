@@ -1,128 +1,98 @@
 <?php
-/**
- * Sentry plugin for Craft CMS 3.x
- *
- * Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.
- *
- * @link      https://github.com/lukeyouell
- * @copyright Copyright (c) 2017 Luke Youell
- */
 
 namespace lukeyouell\sentry\services;
 
-use lukeyouell\sentry\Sentry;
-
 use Craft;
 use craft\base\Component;
+
+use lukeyouell\sentry\Sentry;
+
 use Raven_Client;
 use Raven_ErrorHandler;
 
-/**
- * @author    Luke Youell
- * @package   Sentry
- * @since     1.0.0
- */
+use yii\base\Exception;
+
 class SentryService extends Component
 {
+    // Public Properties
+    // =========================================================================
+
+    public $app;
+
+    public $info;
+
+    public $plugin;
+
+    public $settings;
+
     // Public Methods
     // =========================================================================
 
-    /*
-     * @return mixed
-     */
-    public static function apiGet($path = null, $authToken = null)
+    public function init()
     {
-        $settings = Sentry::$plugin->getSettings();
+        parent::init();
 
-        if ($path === null) {
-            return [
-                'error'  => true,
-                'reason' => 'Missing values'
-            ];
-        }
-
-        if ($authToken === null) {
-            $authToken = $settings->authToken;
-        }
-
-        $client = new \GuzzleHttp\Client([
-            'base_uri'    => 'https://app.getsentry.com',
-            'http_errors' => false,
-            'timeout'     => 5,
-            'headers'     => ['Authorization' => 'Bearer ' . $authToken]
-        ]);
-
-        try {
-            $response = $client->request('GET', $path);
-            $body = json_decode($response->getBody());
-
-            if ($response->getStatusCode() === 200) {
-                return $body;
-            } else {
-                return [
-                    'error'  => true,
-                    'reason' => $body->detail
-                ];
-            }
-        } catch (\Exception $e) {
-              return [
-                  'error'  => true,
-                  'reason' => $e->getMessage()
-              ];
-        }
+        $this->app = Craft::$app;
+        $this->info = $this->app->getInfo();
+        $this->plugin = Sentry::$plugin;
+        $this->settings = $this->plugin->getSettings();
     }
 
-    /*
-     * @return mixed
-     */
-    public static function handleException($exception)
+    public function handleException($exception)
     {
-        $settings = Sentry::$plugin->getSettings();
+        if (!$this->settings->clientDsn) {
+            Craft::error('Failed to report exception due to missing client key (DSN)', $this->plugin->handle);
+            return;
+        }
+
+        $dsn = $this->settings->clientDsn ? Craft::parseEnv($this->settings->clientDsn) : null;
+        $environment = $this->settings->environment ? Craft::parseEnv($this->settings->environment) : null;
 
         // If this is a Twig Runtime exception, use the previous one instead
         if ($exception instanceof \Twig_Error_Runtime && ($previousException = $exception->getPrevious()) !== null) {
             $exception = $previousException;
         }
 
-        $statusCode = isset($exception->statusCode) ? $exception->statusCode : null;
-        $excludedCodes = array_map(function($code) {
-            return trim($code);
-        }, explode(',', $settings->excludedCodes));
+        $statusCode = $exception->statusCode ?? null;
+        $excludedStatusCodes = array_map('trim', explode(',', $this->settings->excludedCodes));
 
-        if (
-            (!$settings->enabled) or
-            ($settings->clientDsn === null) or
-            (in_array($statusCode, $excludedCodes))
-        ) {
+        if (in_array($statusCode, $excludedStatusCodes)) {
+            Craft::info('Exception status code excluded from being reported to Sentry.', $this->plugin->handle);
             return;
         }
 
+        $client = new Raven_Client($dsn);
+        $handler = new Raven_ErrorHandler($client);
+        $handler->registerExceptionHandler();
+        $handler->registerErrorHandler();
+        $handler->registerShutdownFunction();
+
         $user = Craft::$app->getUser()->getIdentity();
 
-        $sentryClient = new Raven_Client($settings->clientDsn);
-
-        $error_handler = new Raven_ErrorHandler($sentryClient);
-        $error_handler->registerExceptionHandler();
-        $error_handler->registerErrorHandler();
-        $error_handler->registerShutdownFunction();
-
         if ($user) {
-            $sentryClient->user_context([
-                'id'       => $user->id,
-                'username' => $user->username,
-                'email'    => $user->email,
-                'admin'    => $user->admin ? 'Yes' : 'No'
+            $client->user_context([
+                'ID'       => $user->id,
+                'Username' => $user->username,
+                'Email'    => $user->email,
+                'Admin'    => $user->admin ? 'Yes' : 'No',
             ]);
         }
 
-        $sentryClient->captureException($exception, [
+        if ($environment) {
+            $client->setEnvironment($environment);
+        }
+
+        $client->captureException($exception, [
             'extra' => [
-                'App Type'    => 'Craft CMS',
-                'App Version' => Craft::$app->getVersion(),
-                'Environment' => CRAFT_ENVIRONMENT ?: 'undefined',
-                'PHP Version' => phpversion(),
-                'Status Code' => $statusCode
-            ]
+                'App Type'               => 'Craft CMS',
+                'App Name'               => $this->info->name,
+                'App Edition (licensed)' => $this->app->getLicensedEditionName(),
+                'App Edition (running)'  => $this->app->getEditionName(),
+                'App Version'            => $this->info->version,
+                'App Version (schema)'   => $this->info->schemaVersion,
+                'PHP Version'            => phpversion(),
+                'Status Code'            => $statusCode,
+            ],
         ]);
     }
 }
