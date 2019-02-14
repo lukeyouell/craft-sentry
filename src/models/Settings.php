@@ -1,25 +1,12 @@
 <?php
-/**
- * Sentry plugin for Craft CMS 3.x
- *
- * Error tracking that helps developers monitor and fix crashes in real time. Iterate continuously. Boost efficiency. Improve user experience.
- *
- * @link      https://github.com/lukeyouell
- * @copyright Copyright (c) 2017 Luke Youell
- */
 
 namespace lukeyouell\sentry\models;
-
-use lukeyouell\sentry\Sentry;
 
 use Craft;
 use craft\base\Model;
 
-/**
- * @author    Luke Youell
- * @package   Sentry
- * @since     1.0.0
- */
+use lukeyouell\sentry\Sentry;
+
 class Settings extends Model
 {
     // Public Properties
@@ -28,40 +15,26 @@ class Settings extends Model
     /**
      * @var string
      */
-    public $enabled = true;
+    public $clientDsn;
 
     /**
      * @var string
      */
-    public $authToken = null;
+    public $environment = '$ENVIRONMENT';
 
     /**
      * @var string
      */
-    public $project = null;
-
-    /**
-     * @var string
-     */
-    public $clientDsn = null;
-
-    /**
-     * @var string
-     */
-    public $excludedCodes = null;
+    public $excludedCodes = '404';
 
     // Public Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['enabled'], 'boolean'],
-            [['authToken', 'project', 'clientDsn', 'excludedCodes'], 'string'],
-            [['authToken'], 'required']
+            [['clientDsn', 'environment', 'excludedCodes'], 'string'],
+            [['clientDsn', 'environment'], 'required'],
         ];
     }
 }

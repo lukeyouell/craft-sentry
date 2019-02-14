@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.5.0 - 2019-02-14
+
+### Added
+- 3.1 compatibility
+- Support for environment variables
+- 'Environment' setting so that you can define the environment value sent to Sentry, instead of using Craft's environment value.
+
+### Changed
+- Craft CMS requirement now set at `^3.1`
+- New icon
+- Simplified settings templates
+- 404 exceptions are excluded by default
+- App name, edition and version information now provided to Sentry
+- Environment value moved from additional information to client config
+
+### Removed
+- Authentication token and project settings as these values are no longer required
+- 'Enabled' setting as this can be handled by disabling the plugin itself
+
 ## 1.4.1 - 2018-11-06
 
 ### Added
