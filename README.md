@@ -54,6 +54,7 @@ Here’s what that config file might look like along with a list of all of the p
 <?php
 
 return [
+    'enabled'       => true,
     'clientDsn'     => '$SENTRY_DSN', // NOT getenv('SENTRY_DSN')
     'environment'   => '$SENTRY_ENVIRONMENT', // NOT getenv('SENTRY_ENVIRONMENT')
     'excludedCodes' => '400, 404, 429', // Comma-separated list
