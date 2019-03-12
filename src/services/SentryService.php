@@ -40,6 +40,11 @@ class SentryService extends Component
 
     public function handleException($exception)
     {
+        if (!$this->settings->enabled) {
+            Craft::info('Exception not reported to Sentry as the plugin is disabled.', $this->plugin->handle);
+            return;
+        }
+
         if (!$this->settings->clientDsn) {
             Craft::error('Failed to report exception due to missing client key (DSN)', $this->plugin->handle);
             return;

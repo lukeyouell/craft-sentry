@@ -13,6 +13,11 @@ class Settings extends Model
     // =========================================================================
 
     /**
+     * @var boolean
+     */
+    public $enabled = true;
+
+    /**
      * @var string
      */
     public $clientDsn;
@@ -33,6 +38,7 @@ class Settings extends Model
     public function rules()
     {
         return [
+            ['enabled', 'boolean'],
             [['clientDsn', 'environment', 'excludedCodes'], 'string'],
             [['clientDsn', 'environment'], 'required'],
         ];
