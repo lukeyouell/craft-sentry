@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.5.1 - 2019-03-12
+
+### Added
+- Reinstated the `enabled` setting [#17](https://github.com/lukeyouell/craft-sentry/issues/17)
+
 ## 1.5.0 - 2019-02-14
 
 ### Added

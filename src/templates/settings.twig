@@ -10,8 +10,18 @@
 
 {% from _self import configWarning %}
 
-{{ forms.autosuggestField({
+{{ forms.lightswitchField({
     first: true,
+    label: "Enabled"|t(plugin.handle),
+    instructions: "If disabled, the plugin will not report exceptions to Sentry."|t(plugin.handle),
+    id: 'enabled',
+    name: 'enabled',
+    on: settings.enabled,
+    disabled: 'enabled' in overrides,
+    warning: 'enabled' in overrides ? configWarning(plugin, 'enabled')
+}) }}
+
+{{ forms.autosuggestField({
     required: true,
     label: "Client Key (DSN)"|t(plugin.handle),
     instructions: "To send data to Sentry you will need to configure an SDK with a client key which can be found in your [project settings](https://sentry.io/settings/) underneath 'Client Keys (DSN)'."|t(plugin.handle),
