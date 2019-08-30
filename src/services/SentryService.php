@@ -5,10 +5,10 @@ namespace lukeyouell\sentry\services;
 use Craft;
 use craft\base\Component;
 
-use lukeyouell\sentry\Sentry;
+use lukeyouell\sentry\Sentry as SentryPlugin;
 
-use Raven_Client;
-use Raven_ErrorHandler;
+use Sentry;
+use Sentry\State\Scope;
 
 use yii\base\Exception;
 
@@ -34,7 +34,7 @@ class SentryService extends Component
 
         $this->app = Craft::$app;
         $this->info = $this->app->getInfo();
-        $this->plugin = Sentry::$plugin;
+        $this->plugin = SentryPlugin::$plugin;
         $this->settings = $this->plugin->getSettings();
     }
 
@@ -66,38 +66,31 @@ class SentryService extends Component
             return;
         }
 
-        $client = new Raven_Client($dsn);
-        $handler = new Raven_ErrorHandler($client);
-        $handler->registerExceptionHandler();
-        $handler->registerErrorHandler();
-        $handler->registerShutdownFunction();
+        Sentry\init([
+            'dsn' => $dsn,
+            'environment' => $environment,
+        ]);
 
         $user = Craft::$app->getUser()->getIdentity();
 
-        if ($user) {
-            $client->user_context([
-                'ID'       => $user->id,
-                'Username' => $user->username,
-                'Email'    => $user->email,
-                'Admin'    => $user->admin ? 'Yes' : 'No',
-            ]);
-        }
+        Sentry\configureScope(function (Scope $scope) {
+            if ($user) {
+                $scope->setUser([
+                    'ID'       => $user->id,
+                    'Username' => $user->username,
+                    'Email'    => $user->email,
+                    'Admin'    => $user->admin ? 'Yes' : 'No',
+                ]);
+            }
 
-        if ($environment) {
-            $client->setEnvironment($environment);
-        }
-
-        $client->captureException($exception, [
-            'extra' => [
-                'App Type'               => 'Craft CMS',
-                'App Name'               => $this->info->name,
-                'App Edition (licensed)' => $this->app->getLicensedEditionName(),
-                'App Edition (running)'  => $this->app->getEditionName(),
-                'App Version'            => $this->info->version,
-                'App Version (schema)'   => $this->info->schemaVersion,
-                'PHP Version'            => phpversion(),
-                'Status Code'            => $statusCode,
-            ],
-        ]);
+            $scope->setExtra('App Type', 'Craft CMS');
+            $scope->setExtra('App Name', $this->info->name);
+            $scope->setExtra('App Edition (licensed)', $this->app->getLicensedEditionName());
+            $scope->setExtra('App Edition (running)', $this->app->getEditionName());
+            $scope->setExtra('App Version', $this->info->version);
+            $scope->setExtra('App Version (schema)', $this->info->schemaVersion);
+            $scope->setExtra('PHP Version', phpversion());
+            $scope->setExtra('Status Code', $statusCode);
+        });
     }
 }
