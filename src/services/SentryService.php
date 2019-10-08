@@ -74,7 +74,7 @@ class SentryService extends Component
         $user = Craft::$app->getUser()->getIdentity();
 
         Sentry\configureScope(function (Scope $scope) {
-            if ($user) {
+            if (isset($user)) {
                 $scope->setUser([
                     'ID'       => $user->id,
                     'Username' => $user->username,
