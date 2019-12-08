@@ -45,10 +45,11 @@
     warning: 'environment' in overrides ? configWarning(plugin, 'environment')
 }) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: "Excluded Status Codes"|t(plugin.handle),
     instructions: "Comma separated list of HTTP status codes that should not be reported to Sentry."|t(plugin.handle),
     id: 'excludedCodes',
+    suggestEnvVars: true,
     name: 'excludedCodes',
     placeholder: '400, 404, 429',
     value: settings.excludedCodes,
