@@ -43,4 +43,19 @@ class Settings extends Model
             [['clientDsn', 'environment'], 'required'],
         ];
     }
+
+    public function getClientDsn()
+    {
+        return $this->clientDsn ? Craft::parseEnv($this->clientDsn) : null;
+    }
+
+    public function getEnvironment()
+    {
+        return $this->environment ? Craft::parseEnv($this->environment) : Craft::parseEnv('$ENVIRONMENT');
+    }
+
+    public function getExcludedStatusCodes()
+    {
+        return $this->excludedCodes ? array_map('trim', explode(',', Craft::parseEnv($this->excludedCodes))) : null;
+    }
 }
